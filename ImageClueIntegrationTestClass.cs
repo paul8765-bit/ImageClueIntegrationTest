@@ -18,7 +18,11 @@ namespace ImageClueIntegrationTest
             try
             {
                 // Setup and load page
-                driver = new ChromeDriver();
+                ChromeOptions options = new ChromeOptions();
+                options.AddArguments("--no-sandbox"); 
+                options.AddArguments("--headless"); 
+                options.AddArguments("--disable-gpu");
+                driver = new ChromeDriver(options);
                 driver.Navigate().GoToUrl("http://52.6.180.102/");
                 Assert.AreEqual("Generate Teams and Clues!", driver.Title);
 
@@ -74,7 +78,11 @@ namespace ImageClueIntegrationTest
             try
             {
                 // Setup and load page
-                driver = new ChromeDriver();
+                ChromeOptions options = new ChromeOptions();
+                options.AddArguments("--no-sandbox");
+                options.AddArguments("--headless");
+                options.AddArguments("--disable-gpu");
+                driver = new ChromeDriver(options);
                 driver.Navigate().GoToUrl("http://52.6.180.102/");
                 Assert.AreEqual("Generate Teams and Clues!", driver.Title);
 
