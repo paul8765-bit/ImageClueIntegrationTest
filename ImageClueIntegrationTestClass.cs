@@ -3,6 +3,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 
@@ -19,15 +20,15 @@ namespace ImageClueIntegrationTest
             {
                 // Setup and load page
                 ChromeOptions options = new ChromeOptions();
-                options.AddArguments("--no-sandbox"); 
-                options.AddArguments("--headless"); 
-                options.AddArguments("--disable-gpu");
+                //options.AddArguments("--no-sandbox"); 
+                //options.AddArguments("--headless"); 
+                //options.AddArguments("--disable-gpu");
                 driver = new ChromeDriver(options);
                 driver.Navigate().GoToUrl("http://52.6.180.102/");
                 Assert.AreEqual("Generate Teams and Clues!", driver.Title);
 
-                // Enter the player names and submit (annd wait)
-                SendKeysById(driver, "txt_inPlayers", "Paul\nChris\nEmily\nJoe");
+                // Enter the player names and submit (and wait)
+                EnterPlayerNameAndPhoneIntoTable(driver, 4);
                 ClickButtonById(driver, "btn_players");
                 Thread.Sleep(2000);
 
@@ -79,15 +80,15 @@ namespace ImageClueIntegrationTest
             {
                 // Setup and load page
                 ChromeOptions options = new ChromeOptions();
-                options.AddArguments("--no-sandbox");
-                options.AddArguments("--headless");
-                options.AddArguments("--disable-gpu");
+                //options.AddArguments("--no-sandbox");
+                //options.AddArguments("--headless");
+                //options.AddArguments("--disable-gpu");
                 driver = new ChromeDriver(options);
                 driver.Navigate().GoToUrl("http://52.6.180.102/");
                 Assert.AreEqual("Generate Teams and Clues!", driver.Title);
 
-                // Enter the player names and submit (annd wait)
-                SendKeysById(driver, "txt_inPlayers", "Paul\nChris\nEmily\nJoe\nHicksy\nBen\nAdam\nJosh\nWinnie");
+                // Enter the player names and submit (and wait)
+                EnterPlayerNameAndPhoneIntoTable(driver, 9);
                 ClickButtonById(driver, "btn_players");
                 Thread.Sleep(2000);
 
@@ -132,6 +133,57 @@ namespace ImageClueIntegrationTest
                     driver.Quit();
                 }
             }
+        }
+
+        private void EnterPlayerNameAndPhoneIntoTable(IWebDriver driver, int numberOfPlayers)
+        {
+            // Firstly, need to request extra fields as needed
+            // the page contains 3 fields by default, so add as needed
+            for (int playerIndex = 3; playerIndex < numberOfPlayers; playerIndex++)
+            {
+                ClickButtonById(driver, "btn_addRows");
+            }
+            List<IWebElement> playerNameFields = GetElementsByName(driver, "tbl_editable_name_fields");
+            List<IWebElement> playerPhoneFields = GetElementsByName(driver, "tbl_editable_phone_fields");
+
+            List<string> playerNames = GetPlayerNames(playerNameFields.Count);
+            List<string> playerPhones = GetPlayerPhones(playerPhoneFields.Count);
+
+            // for each player name field
+            for (int fieldIndex = 0; fieldIndex < playerNameFields.Count; fieldIndex++)
+            {
+                IWebElement currentPlayerNameField = playerNameFields[fieldIndex];
+                // delete the default word "player"
+                for (int delCount = 0; delCount < 6; delCount++)
+                {
+                    currentPlayerNameField.SendKeys(Keys.Backspace);
+                }
+                currentPlayerNameField.SendKeys(playerNames[fieldIndex]);
+            }
+
+            // same for phones
+            for (int fieldIndex = 0; fieldIndex < playerPhoneFields.Count; fieldIndex++)
+            {
+                IWebElement currentPlayerPhoneField = playerPhoneFields[fieldIndex];
+                // delete the default entry "+44"
+                for (int delCount = 0; delCount < 3; delCount++)
+                {
+                    currentPlayerPhoneField.SendKeys(Keys.Backspace);
+                }
+                currentPlayerPhoneField.SendKeys(playerPhones[fieldIndex]);
+            }
+        }
+
+        private List<string> GetPlayerNames(int count)
+        {
+            string[] names = File.ReadAllLines("names.txt");
+            return names.ToList().Take(count).ToList();
+        }
+
+        private List<string> GetPlayerPhones(int count)
+        {
+            string[] names = File.ReadAllLines("phones.txt");
+            return names.ToList().Take(count).ToList();
         }
 
         private void SendKeysById(IWebDriver driver, string elementId, string text)
