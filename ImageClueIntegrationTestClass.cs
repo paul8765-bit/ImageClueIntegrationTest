@@ -28,13 +28,14 @@ namespace ImageClueIntegrationTest
                 Assert.AreEqual("Generate Teams and Clues!", driver.Title);
 
                 // Enter the player names and submit (and wait)
-                EnterPlayerNameAndPhoneIntoTable(driver, 4);
+                EnterPlayerNameAndPhoneIntoTable(driver, 4, "phones_good.txt");
                 ClickButtonById(driver, "btn_players");
                 Thread.Sleep(2000);
 
                 // Check the hidden teams text is correct
                 Assert.IsFalse(GetVisibilityById(driver, "outTeams"));
-                Assert.AreEqual("[[\"Paul\",\"Emily\"],[\"Chris\",\"Joe\"]]", GetTextById(driver, "outTeams"));
+                Assert.AreEqual("[[{\"Item1\":\"Paul\",\"Item2\":\"447986869466\"},{\"Item1\":\"Emily\",\"Item2\":\"447986869466\"}],[{\"Item1\":\"Chris\",\"Item2\":\"447986869466\"},{\"Item1\":\"Joe\",\"Item2\":\"447986869466\"}]]", 
+                    GetTextById(driver, "outTeams"));
 
                 // Check the displayed teams text is also correct
                 Assert.IsTrue(GetVisibilityById(driver, "outTeamsUserFriendly"));
@@ -45,10 +46,21 @@ namespace ImageClueIntegrationTest
                 ClickButtonById(driver, "btn_Clues");
                 Thread.Sleep(2000);
 
+                // Check the hidden clues text is correct
+                Assert.IsFalse(GetVisibilityById(driver, "outCluesHidden"));
+                Assert.IsTrue(GetTextById(driver, "outCluesHidden").Contains("[{\"Adjective\":"));
+                Assert.IsTrue(GetTextById(driver, "outCluesHidden").Contains("\"Noun\":"));
+
                 // Check the clues have been generated and look sensible!
                 string clues = GetElementById(driver, "outClues").Text;
                 Assert.IsTrue(clues.Contains("Team 1: please draw a"));
                 Assert.IsTrue(clues.Contains("Team 2: please draw a"));
+
+                // Now test that the SMS send works successfully
+                ClickButtonById(driver, "btn_sendSMS");
+                Thread.Sleep(4000);
+                string smsOutcome = GetTextById(driver, "outSendSMSStatus");
+                Assert.AreEqual("Successfully sent SMS messages!", smsOutcome);
             }
             catch (DriverServiceNotFoundException e)
             {
@@ -88,13 +100,13 @@ namespace ImageClueIntegrationTest
                 Assert.AreEqual("Generate Teams and Clues!", driver.Title);
 
                 // Enter the player names and submit (and wait)
-                EnterPlayerNameAndPhoneIntoTable(driver, 9);
+                EnterPlayerNameAndPhoneIntoTable(driver, 9, "phones_bad.txt");
                 ClickButtonById(driver, "btn_players");
                 Thread.Sleep(2000);
 
                 // Check the hidden teams text is correct
                 Assert.IsFalse(GetVisibilityById(driver, "outTeams"));
-                Assert.AreEqual("[[\"Paul\",\"Hicksy\",\"Winnie\"],[\"Chris\",\"Ben\"],[\"Emily\",\"Adam\"],[\"Joe\",\"Josh\"]]", 
+                Assert.AreEqual("[[{\"Item1\":\"Paul\",\"Item2\":\"441111\"},{\"Item1\":\"Hicksy\",\"Item2\":\"445555\"},{\"Item1\":\"Winnie\",\"Item2\":\"442222\"}],[{\"Item1\":\"Chris\",\"Item2\":\"442222\"},{\"Item1\":\"Ben\",\"Item2\":\"446666\"}],[{\"Item1\":\"Emily\",\"Item2\":\"443333\"},{\"Item1\":\"Adam\",\"Item2\":\"447777\"}],[{\"Item1\":\"Joe\",\"Item2\":\"444444\"},{\"Item1\":\"Josh\",\"Item2\":\"441111\"}]]", 
                     GetTextById(driver, "outTeams"));
 
                 // Check the displayed teams text is also correct
@@ -106,12 +118,23 @@ namespace ImageClueIntegrationTest
                 ClickButtonById(driver, "btn_Clues");
                 Thread.Sleep(2000);
 
+                // Check the hidden clues text is correct
+                Assert.IsFalse(GetVisibilityById(driver, "outCluesHidden"));
+                Assert.IsTrue(GetTextById(driver, "outCluesHidden").Contains("[{\"Adjective\":"));
+                Assert.IsTrue(GetTextById(driver, "outCluesHidden").Contains("\"Noun\":"));
+
                 // Check the clues have been generated and look sensible!
                 string clues = GetElementById(driver, "outClues").Text;
                 Assert.IsTrue(clues.Contains("Team 1: please draw a"));
                 Assert.IsTrue(clues.Contains("Team 2: please draw a"));
                 Assert.IsTrue(clues.Contains("Team 3: please draw a"));
                 Assert.IsTrue(clues.Contains("Team 4: please draw a"));
+
+                // Now test that the SMS send fails as expected for bad phone numbers
+                ClickButtonById(driver, "btn_sendSMS");
+                Thread.Sleep(4000);
+                string smsOutcome = GetTextById(driver, "outSendSMSStatus");
+                Assert.AreEqual("TypeError: Failed to fetch", smsOutcome);
             }
             catch (DriverServiceNotFoundException e)
             {
@@ -135,7 +158,7 @@ namespace ImageClueIntegrationTest
             }
         }
 
-        private void EnterPlayerNameAndPhoneIntoTable(IWebDriver driver, int numberOfPlayers)
+        private void EnterPlayerNameAndPhoneIntoTable(IWebDriver driver, int numberOfPlayers, string phonesFile)
         {
             // Firstly, need to request extra fields as needed
             // the page contains 3 fields by default, so add as needed
@@ -147,7 +170,7 @@ namespace ImageClueIntegrationTest
             List<IWebElement> playerPhoneFields = GetElementsByName(driver, "tbl_editable_phone_fields");
 
             List<string> playerNames = GetPlayerNames(playerNameFields.Count);
-            List<string> playerPhones = GetPlayerPhones(playerPhoneFields.Count);
+            List<string> playerPhones = GetPlayerPhones(phonesFile, playerPhoneFields.Count);
 
             // for each player name field
             for (int fieldIndex = 0; fieldIndex < playerNameFields.Count; fieldIndex++)
@@ -165,8 +188,8 @@ namespace ImageClueIntegrationTest
             for (int fieldIndex = 0; fieldIndex < playerPhoneFields.Count; fieldIndex++)
             {
                 IWebElement currentPlayerPhoneField = playerPhoneFields[fieldIndex];
-                // delete the default entry "+44"
-                for (int delCount = 0; delCount < 3; delCount++)
+                // delete the default entry "44"
+                for (int delCount = 0; delCount < 2; delCount++)
                 {
                     currentPlayerPhoneField.SendKeys(Keys.Backspace);
                 }
@@ -180,9 +203,9 @@ namespace ImageClueIntegrationTest
             return names.ToList().Take(count).ToList();
         }
 
-        private List<string> GetPlayerPhones(int count)
+        private List<string> GetPlayerPhones(string phonesFile, int count)
         {
-            string[] names = File.ReadAllLines("phones.txt");
+            string[] names = File.ReadAllLines(phonesFile);
             return names.ToList().Take(count).ToList();
         }
 
