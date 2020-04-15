@@ -24,13 +24,13 @@ namespace ImageClueIntegrationTest
                 //options.AddArguments("--headless"); 
                 //options.AddArguments("--disable-gpu");
                 driver = new ChromeDriver(options);
-                driver.Navigate().GoToUrl("http://52.6.180.102/");
+                driver.Navigate().GoToUrl("https://imageclue.co.uk");
                 Assert.AreEqual("Generate Teams and Clues!", driver.Title);
 
                 // Enter the player names and submit (and wait)
                 EnterPlayerNameAndPhoneIntoTable(driver, 4, "phones_good.txt");
                 ClickButtonById(driver, "btn_players");
-                Thread.Sleep(2000);
+                Thread.Sleep(4000);
 
                 // Check the hidden teams text is correct
                 Assert.IsFalse(GetVisibilityById(driver, "outTeams"));
@@ -44,7 +44,7 @@ namespace ImageClueIntegrationTest
 
                 // Submit the request to get the clues
                 ClickButtonById(driver, "btn_Clues");
-                Thread.Sleep(2000);
+                Thread.Sleep(4000);
 
                 // Check the hidden clues text is correct
                 Assert.IsFalse(GetVisibilityById(driver, "outCluesHidden"));
@@ -58,7 +58,7 @@ namespace ImageClueIntegrationTest
 
                 // Now test that the SMS send works successfully
                 ClickButtonById(driver, "btn_sendSMS");
-                Thread.Sleep(4000);
+                Thread.Sleep(8000);
                 string smsOutcome = GetTextById(driver, "outSendSMSStatus");
                 Assert.AreEqual("Successfully sent SMS messages!", smsOutcome);
             }
@@ -96,7 +96,7 @@ namespace ImageClueIntegrationTest
                 //options.AddArguments("--headless");
                 //options.AddArguments("--disable-gpu");
                 driver = new ChromeDriver(options);
-                driver.Navigate().GoToUrl("http://52.6.180.102/");
+                driver.Navigate().GoToUrl("https://imageclue.co.uk");
                 Assert.AreEqual("Generate Teams and Clues!", driver.Title);
 
                 // Enter the player names and submit (and wait)
