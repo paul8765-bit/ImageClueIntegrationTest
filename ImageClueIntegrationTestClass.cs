@@ -134,7 +134,7 @@ namespace ImageClueIntegrationTest
                 ClickButtonById(driver, "btn_sendSMS");
                 Thread.Sleep(4000);
                 string smsOutcome = GetTextById(driver, "outSendSMSStatus");
-                Assert.AreEqual("TypeError: Failed to fetch", smsOutcome);
+                Assert.AreEqual("The 'To' number +441111 is not a valid phone number.", smsOutcome);
             }
             catch (DriverServiceNotFoundException e)
             {
