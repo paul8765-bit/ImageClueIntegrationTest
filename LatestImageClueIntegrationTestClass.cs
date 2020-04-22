@@ -10,10 +10,10 @@ using System.Threading;
 namespace ImageClueIntegrationTest
 {
     [TestClass]
-    public class ImageClueIntegrationTestClass
+    public class LatestImageClueIntegrationTestClass
     {
         [TestMethod]
-        public void TestBasicFlowWithFourPeople()
+        public void LatestTestBasicFlowWithFourPeople()
         {
             IWebDriver driver = null;
             try
@@ -24,7 +24,14 @@ namespace ImageClueIntegrationTest
                 //options.AddArguments("--headless"); 
                 //options.AddArguments("--disable-gpu");
                 driver = new ChromeDriver(options);
-                driver.Navigate().GoToUrl("https://imageclue.co.uk");
+                driver.Navigate().GoToUrl("https://34.193.188.174/?environment=uat");
+
+                // Need to navigate through the certificate stuff first
+                Assert.AreEqual("Privacy error", driver.Title);
+                ClickButtonById(driver, "details-button");
+                ClickButtonById(driver, "proceed-link");
+                Thread.Sleep(1500);
+                // Now back to normal
                 Assert.AreEqual("Generate Teams and Clues!", driver.Title);
 
                 // Enter the player names and submit (and wait)
@@ -85,7 +92,7 @@ namespace ImageClueIntegrationTest
         }
 
         [TestMethod]
-        public void TestBasicFlowWithNinePeople()
+        public void LatestTestBasicFlowWithNinePeople()
         {
             IWebDriver driver = null;
             try
@@ -96,7 +103,14 @@ namespace ImageClueIntegrationTest
                 //options.AddArguments("--headless");
                 //options.AddArguments("--disable-gpu");
                 driver = new ChromeDriver(options);
-                driver.Navigate().GoToUrl("https://imageclue.co.uk");
+                driver.Navigate().GoToUrl("https://34.193.188.174/?environment=uat");
+
+                // Need to navigate through the certificate stuff first
+                Assert.AreEqual("Privacy error", driver.Title);
+                ClickButtonById(driver, "details-button");
+                ClickButtonById(driver, "proceed-link");
+                Thread.Sleep(1500);
+                // Now back to normal
                 Assert.AreEqual("Generate Teams and Clues!", driver.Title);
 
                 // Enter the player names and submit (and wait)

@@ -8,12 +8,12 @@ namespace ImageClueIntegrationTest
         {
             try
             {
-                ImageClueIntegrationTestClass testClass = new ImageClueIntegrationTestClass();
+                StableImageClueIntegrationTestClass testClass = new StableImageClueIntegrationTestClass();
                 Console.WriteLine("\n----------About to run 2 integration tests-------------\n");
                 Console.WriteLine("\n----------First Test: Basic Flow with 4 people -------------\n");
-                testClass.TestBasicFlowWithFourPeople();
+                testClass.StableTestBasicFlowWithFourPeople();
                 Console.WriteLine("\n----------Second Test: Basic Flow with 9 people -------------\n");
-                testClass.TestBasicFlowWithNinePeople();
+                testClass.StableTestBasicFlowWithNinePeople();
                 Console.WriteLine("\n----------All tests successfully completed -------------\n");
             }
             catch (Exception e)
