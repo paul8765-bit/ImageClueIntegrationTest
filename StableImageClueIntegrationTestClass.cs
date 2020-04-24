@@ -34,8 +34,8 @@ namespace ImageClueIntegrationTest
 
                 // Check the hidden teams text is correct
                 Assert.IsFalse(GetVisibilityById(driver, "outTeams"));
-                Assert.AreEqual("[[{\"Item1\":\"Paul\",\"Item2\":\"447986869466\"},{\"Item1\":\"Emily\",\"Item2\":\"447986869466\"}],[{\"Item1\":\"Chris\",\"Item2\":\"447986869466\"},{\"Item1\":\"Joe\",\"Item2\":\"447986869466\"}]]", 
-                    GetTextById(driver, "outTeams"));
+                // Just want to check the result is an integer
+                int.Parse(GetTextById(driver, "outTeams"));
 
                 // Check the displayed teams text is also correct
                 Assert.IsTrue(GetVisibilityById(driver, "outTeamsUserFriendly"));
@@ -48,8 +48,7 @@ namespace ImageClueIntegrationTest
 
                 // Check the hidden clues text is correct
                 Assert.IsFalse(GetVisibilityById(driver, "outCluesHidden"));
-                Assert.IsTrue(GetTextById(driver, "outCluesHidden").Contains("[{\"Adjective\":"));
-                Assert.IsTrue(GetTextById(driver, "outCluesHidden").Contains("\"Noun\":"));
+                int.Parse(GetTextById(driver, "outCluesHidden"));
 
                 // Check the clues have been generated and look sensible!
                 string clues = GetElementById(driver, "outClues").Text;
@@ -111,8 +110,8 @@ namespace ImageClueIntegrationTest
 
                 // Check the displayed teams text is also correct
                 Assert.IsTrue(GetVisibilityById(driver, "outTeamsUserFriendly"));
-                Assert.AreEqual("Team1has3membersPaulHicksyWinnieTeam2has2membersChrisBenTeam3has2membersEmilyAdamTeam4has2membersJoeJosh",
-                    RemoveWhitespaceAndNewlines(GetElementById(driver, "outTeamsUserFriendly").Text));
+                // Just want to check the result is an integer
+                int.Parse(GetTextById(driver, "outTeams"));
 
                 // Submit the request to get the clues
                 ClickButtonById(driver, "btn_Clues");
@@ -120,8 +119,8 @@ namespace ImageClueIntegrationTest
 
                 // Check the hidden clues text is correct
                 Assert.IsFalse(GetVisibilityById(driver, "outCluesHidden"));
-                Assert.IsTrue(GetTextById(driver, "outCluesHidden").Contains("[{\"Adjective\":"));
-                Assert.IsTrue(GetTextById(driver, "outCluesHidden").Contains("\"Noun\":"));
+                // Just want to check the result is an integer
+                int.Parse(GetTextById(driver, "outCluesHidden"));
 
                 // Check the clues have been generated and look sensible!
                 string clues = GetElementById(driver, "outClues").Text;

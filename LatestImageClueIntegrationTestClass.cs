@@ -24,7 +24,7 @@ namespace ImageClueIntegrationTest
                 //options.AddArguments("--headless"); 
                 //options.AddArguments("--disable-gpu");
                 driver = new ChromeDriver(options);
-                driver.Navigate().GoToUrl("https://34.193.188.174/?environment=uat");
+                driver.Navigate().GoToUrl("https://34.193.188.174/?env=uat");
 
                 // Need to navigate through the certificate stuff first
                 Assert.AreEqual("Privacy error", driver.Title);
@@ -41,8 +41,8 @@ namespace ImageClueIntegrationTest
 
                 // Check the hidden teams text is correct
                 Assert.IsFalse(GetVisibilityById(driver, "outTeams"));
-                Assert.AreEqual("[[{\"Item1\":\"Paul\",\"Item2\":\"447986869466\"},{\"Item1\":\"Emily\",\"Item2\":\"447986869466\"}],[{\"Item1\":\"Chris\",\"Item2\":\"447986869466\"},{\"Item1\":\"Joe\",\"Item2\":\"447986869466\"}]]", 
-                    GetTextById(driver, "outTeams"));
+                // Just want to check the result is an integer
+                int.Parse(GetTextById(driver, "outTeams"));
 
                 // Check the displayed teams text is also correct
                 Assert.IsTrue(GetVisibilityById(driver, "outTeamsUserFriendly"));
@@ -55,8 +55,7 @@ namespace ImageClueIntegrationTest
 
                 // Check the hidden clues text is correct
                 Assert.IsFalse(GetVisibilityById(driver, "outCluesHidden"));
-                Assert.IsTrue(GetTextById(driver, "outCluesHidden").Contains("[{\"Adjective\":"));
-                Assert.IsTrue(GetTextById(driver, "outCluesHidden").Contains("\"Noun\":"));
+                int.Parse(GetTextById(driver, "outCluesHidden"));
 
                 // Check the clues have been generated and look sensible!
                 string clues = GetElementById(driver, "outClues").Text;
@@ -103,7 +102,7 @@ namespace ImageClueIntegrationTest
                 //options.AddArguments("--headless");
                 //options.AddArguments("--disable-gpu");
                 driver = new ChromeDriver(options);
-                driver.Navigate().GoToUrl("https://34.193.188.174/?environment=uat");
+                driver.Navigate().GoToUrl("https://34.193.188.174/?env=uat");
 
                 // Need to navigate through the certificate stuff first
                 Assert.AreEqual("Privacy error", driver.Title);
@@ -120,8 +119,8 @@ namespace ImageClueIntegrationTest
 
                 // Check the hidden teams text is correct
                 Assert.IsFalse(GetVisibilityById(driver, "outTeams"));
-                Assert.AreEqual("[[{\"Item1\":\"Paul\",\"Item2\":\"441111\"},{\"Item1\":\"Hicksy\",\"Item2\":\"445555\"},{\"Item1\":\"Winnie\",\"Item2\":\"442222\"}],[{\"Item1\":\"Chris\",\"Item2\":\"442222\"},{\"Item1\":\"Ben\",\"Item2\":\"446666\"}],[{\"Item1\":\"Emily\",\"Item2\":\"443333\"},{\"Item1\":\"Adam\",\"Item2\":\"447777\"}],[{\"Item1\":\"Joe\",\"Item2\":\"444444\"},{\"Item1\":\"Josh\",\"Item2\":\"441111\"}]]", 
-                    GetTextById(driver, "outTeams"));
+                // Just want to check the result is an integer
+                int.Parse(GetTextById(driver, "outTeams"));
 
                 // Check the displayed teams text is also correct
                 Assert.IsTrue(GetVisibilityById(driver, "outTeamsUserFriendly"));
@@ -134,8 +133,8 @@ namespace ImageClueIntegrationTest
 
                 // Check the hidden clues text is correct
                 Assert.IsFalse(GetVisibilityById(driver, "outCluesHidden"));
-                Assert.IsTrue(GetTextById(driver, "outCluesHidden").Contains("[{\"Adjective\":"));
-                Assert.IsTrue(GetTextById(driver, "outCluesHidden").Contains("\"Noun\":"));
+                // Just want to check the result is an integer
+                int.Parse(GetTextById(driver, "outCluesHidden"));
 
                 // Check the clues have been generated and look sensible!
                 string clues = GetElementById(driver, "outClues").Text;
