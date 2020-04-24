@@ -105,8 +105,8 @@ namespace ImageClueIntegrationTest
 
                 // Check the hidden teams text is correct
                 Assert.IsFalse(GetVisibilityById(driver, "outTeams"));
-                Assert.AreEqual("[[{\"Item1\":\"Paul\",\"Item2\":\"441111\"},{\"Item1\":\"Hicksy\",\"Item2\":\"445555\"},{\"Item1\":\"Winnie\",\"Item2\":\"442222\"}],[{\"Item1\":\"Chris\",\"Item2\":\"442222\"},{\"Item1\":\"Ben\",\"Item2\":\"446666\"}],[{\"Item1\":\"Emily\",\"Item2\":\"443333\"},{\"Item1\":\"Adam\",\"Item2\":\"447777\"}],[{\"Item1\":\"Joe\",\"Item2\":\"444444\"},{\"Item1\":\"Josh\",\"Item2\":\"441111\"}]]", 
-                    GetTextById(driver, "outTeams"));
+                // Just want to check the result is an integer
+                int.Parse(GetTextById(driver, "outTeams"));
 
                 // Check the displayed teams text is also correct
                 Assert.IsTrue(GetVisibilityById(driver, "outTeamsUserFriendly"));
